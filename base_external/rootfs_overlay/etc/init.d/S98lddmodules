@@ -10,7 +10,7 @@ case "$1" in
 
         # invoke insmod with all arguments we got
         # and use a pathname, as insmod doesn't look in . by default
-        insmod /lib/modules/$(uname -r)/updates/$module.ko $* || exit 1
+        insmod /lib/modules/$(uname -r)/updates/$module.ko || exit 1
 
         # retrieve major number
         major=$(awk "\$2==\"$module\" {print \$1}" /proc/devices)
@@ -31,7 +31,7 @@ case "$1" in
 
         # invoke insmod with all arguments we got
         # and use a pathname, as insmod doesn't look in . by default
-        insmod /lib/modules/$(uname -r)/updates/$module.ko $* || exit 1
+        insmod /lib/modules/$(uname -r)/updates/$module.ko || exit 1
 		
         # retrieve major number
         major=$(awk "\$2==\"$module\" {print \$1}" /proc/devices)
@@ -54,7 +54,7 @@ case "$1" in
         device="scull"
         mode="664"
         # invoke rmmod with all arguments we got
-		rmmod $module $* || exit 1
+		rmmod $module || exit 1
 
         # Remove stale nodes
         rm -f /dev/${device} /dev/${device}0
@@ -69,7 +69,7 @@ case "$1" in
         device="faulty"
         mode="664"
         # invoke rmmod with all arguments we got
-		rmmod $module $* || exit 1
+		rmmod $module || exit 1
 
         # Remove stale nodes
         rm -f /dev/${device} /dev/${device}0
