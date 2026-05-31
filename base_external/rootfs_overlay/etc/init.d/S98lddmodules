@@ -1,0 +1,90 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+
+		echo "Starting scull"
+        module="scull"
+        device="scull"
+        mode="664"
+
+        # invoke insmod with all arguments we got
+        # and use a pathname, as insmod doesn't look in . by default
+        insmod /lib/modules/$(uname -r)/updates/$module.ko $* || exit 1
+
+        # retrieve major number
+        major=$(awk "\$2==\"$module\" {print \$1}" /proc/devices)
+
+        # Remove stale nodes and replace them, then set file permissions
+        rm -f /dev/${device}0
+        mknod /dev/${device}0 c $major 0
+        ln -sf ${device}0 /dev/${device}
+        chmod $mode /dev/${device}0
+
+
+
+
+        echo "Starting faulty"
+        module="faulty"
+        device="faulty"
+        mode="664"
+
+        # invoke insmod with all arguments we got
+        # and use a pathname, as insmod doesn't look in . by default
+        insmod /lib/modules/$(uname -r)/updates/$module.ko $* || exit 1
+		
+        # retrieve major number
+        major=$(awk "\$2==\"$module\" {print \$1}" /proc/devices)
+
+        # Remove stale nodes and replace them, then set file permissions
+        rm -f /dev/${device}0
+        mknod /dev/${device}0 c $major 0
+        ln -sf ${device}0 /dev/${device}
+        chmod $mode /dev/${device}0
+
+
+
+        echo "Starting hello"
+        modprobe hello
+
+	;;
+	stop)
+		echo "Stopping scull"
+        module="scull"
+        device="scull"
+        mode="664"
+        # invoke rmmod with all arguments we got
+		rmmod $module $* || exit 1
+
+        # Remove stale nodes
+        rm -f /dev/${device} /dev/${device}0
+
+
+
+
+
+
+        echo "Stopping faulty"
+        module="faulty"
+        device="faulty"
+        mode="664"
+        # invoke rmmod with all arguments we got
+		rmmod $module $* || exit 1
+
+        # Remove stale nodes
+        rm -f /dev/${device} /dev/${device}0
+
+
+
+
+
+        echo "Stopping hello"
+        rmmod hello
+	;;
+	*)
+		echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit 0
+
