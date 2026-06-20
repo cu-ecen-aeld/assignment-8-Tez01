@@ -1,0 +1,6 @@
+
+config BR2_PACKAGE_AESDCHAR
+	bool "aesdchar"
+	help
+	  Includes the aesdchar driver in kernel image
+	  Used to understand building kernel modules in kernel image
